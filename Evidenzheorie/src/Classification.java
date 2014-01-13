@@ -33,6 +33,10 @@ public class Classification {
 		
 		for(Evidenz e : evidenzen)
 			System.out.println("Frame " + e.getFrame().getId() + " --> " + e.getMostLiklyEmotion());
+		/*
+		Evidenz e = new Evidenz(frames.get(0));
+		System.out.println("Frame " + e.getFrame().getId() + " --> " + e.getMostLiklyEmotion());
+		e.printM123();*/
 	}
 	
 	/**
