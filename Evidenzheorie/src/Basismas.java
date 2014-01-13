@@ -36,9 +36,6 @@ public class Basismas {
 	 * @param m2	Das zweite Basismas
 	 */
 	public Basismas(String name, Basismas m1, Basismas m2){
-		/**
-		 * TODO: Ein neues Basismas durch Akkumulation erstellen
-		 */
 		// Erzeugen der Akkumulation, der Umweg ueber die tmp Varable ist notwendig, da Java keine
 		// Funktion bietet, die die Schnittmenge zweier Mengen zurueckgibt, mit retainAll werden nur die
 		// Elemente aus einem Set entfernt, welche NICHT im zweiten (dem das der Funktion uebergeben wird)
