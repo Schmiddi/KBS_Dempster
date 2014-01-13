@@ -27,18 +27,18 @@ public class Evidenz {
 		 */
 		ArrayList<TeilmengeBM> teilmengen = new ArrayList<TeilmengeBM>();
 		if(frame.getPixelStirnfalten() <= meanStirn)
-			teilmengen.add(new TeilmengeBM(new String[]{"wut"}, 0.4));
+			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.WUT}, 0.4));
 		else
-			teilmengen.add(new TeilmengeBM(new String[]{"angst", "ueberraschung"}, 0.4));
-		teilmengen.add(new TeilmengeBM(allEmotions, 0.6));
+			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.ANGST,Emotions.UEBERRASCHUNG}, 0.4));
+		teilmengen.add(new TeilmengeBM(Emotions.all(), 0.6));
 		m1 = new Basismas("m1", teilmengen);
 		
 		teilmengen = new ArrayList<TeilmengeBM>();
 		if(frame.getPixelAugen() <= meanAugen)
-			teilmengen.add(new TeilmengeBM(new String[]{"verachtung", "ekel"}, 0.35));
+			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.VERACHTUNG,Emotions.EKEL}, 0.35));
 		else
-			teilmengen.add(new TeilmengeBM(new String[]{"angst", "ueberraschung"}, 0.35));
-		teilmengen.add(new TeilmengeBM(allEmotions, 0.65));
+			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.ANGST,Emotions.UEBERRASCHUNG}, 0.35));
+		teilmengen.add(new TeilmengeBM(Emotions.all(), 0.65));
 		m2 = new Basismas("m2", teilmengen);
 		
 		/**
@@ -49,12 +49,12 @@ public class Evidenz {
 		 */
 		teilmengen = new ArrayList<TeilmengeBM>();
 		if(frame.getMundwinkel() > 0) {
-			teilmengen.add(new TeilmengeBM(new String[]{"freude", "angst"}, 0.4));
-			teilmengen.add(new TeilmengeBM(allEmotions, 0.6));
+			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.FREUDE,Emotions.ANGST}, 0.4));
+			teilmengen.add(new TeilmengeBM(Emotions.all(), 0.6));
 		}
 		else {
-			teilmengen.add(new TeilmengeBM(new String[]{"ueberraschung", "wut", "verachtung", "ekel"}, 0.2));
-			teilmengen.add(new TeilmengeBM(allEmotions, 0.8));
+			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.UEBERRASCHUNG,Emotions.WUT,Emotions.VERACHTUNG,Emotions.EKEL}, 0.2));
+			teilmengen.add(new TeilmengeBM(Emotions.all(), 0.8));
 		}
 		m3 = new Basismas("m3", teilmengen);
 		
@@ -66,7 +66,7 @@ public class Evidenz {
 		return frame;
 	}
 	
-	public String getMostLiklyEmotion() {
+	public Emotions getMostLiklyEmotion() {
 		return m123.getMostLiklyEmotion();
 	}
 	public void printM123(){

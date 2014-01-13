@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 public class Classification {
@@ -34,7 +35,7 @@ public class Classification {
 		for(Evidenz e : evidenzen)
 			System.out.println("Frame " + e.getFrame().getId() + " --> " + e.getMostLiklyEmotion());
 		/*
-		Evidenz e = new Evidenz(frames.get(0));
+		Evidenz e = new Evidenz(frames.get(30));
 		System.out.println("Frame " + e.getFrame().getId() + " --> " + e.getMostLiklyEmotion());
 		e.printM123();*/
 	}
@@ -113,7 +114,6 @@ public class Classification {
 	 */
 	public static void main(String[] args) {
 		new Classification();
-
 	}
 
 }

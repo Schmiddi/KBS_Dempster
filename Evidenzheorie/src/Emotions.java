@@ -13,4 +13,7 @@ public enum Emotions {
 	    	default:    		return "";
 	    }
 	}
+	public static Emotions[] all(){
+		return new Emotions[]{VERACHTUNG,EKEL,WUT,UEBERRASCHUNG,ANGST,FREUDE};
+	}
 }

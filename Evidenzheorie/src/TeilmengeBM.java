@@ -11,7 +11,7 @@ public class TeilmengeBM {
 	/**
 	 * Enthaelt Emotionen fuer die dieses Basismas erzeugt werden soll
 	 */
-	private TreeSet<String> emotions;
+	private TreeSet<Emotions> emotions;
 	/**
 	 * Die Evidenz die diesem Basismas zugeordnet ist
 	 */
@@ -23,23 +23,23 @@ public class TeilmengeBM {
 	 * @param emotions
 	 * @param evidenz
 	 */
-	public TeilmengeBM(String[] emotions, double evidenz){
-		this.emotions = new TreeSet<String>();
-		for(String s : emotions)
+	public TeilmengeBM(Emotions[] emotions, double evidenz){
+		this.emotions = new TreeSet<Emotions>();
+		for(Emotions s : emotions)
 			this.emotions.add(s);
 		this.evidenz = evidenz;
 	}
 	
-	public TeilmengeBM(TreeSet<String> emotions, double evidenz) {
+	public TeilmengeBM(TreeSet<Emotions> emotions, double evidenz) {
 		this.emotions = emotions;
 		this.evidenz = evidenz;
 	}
 
-	public TreeSet<String> getEmotions() {
+	public TreeSet<Emotions> getEmotions() {
 		return emotions;
 	}
 
-	public void setEmotions(TreeSet<String> emotions) {
+	public void setEmotions(TreeSet<Emotions> emotions) {
 		this.emotions = emotions;
 	}
 

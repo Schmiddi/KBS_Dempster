@@ -46,10 +46,10 @@ public class Basismas {
 		this.name = name;
 		this.teilmengen = new ArrayList<TeilmengeBM>();
 		
-		TreeSet<String> tmp;
+		TreeSet<Emotions> tmp;
 		for(TeilmengeBM m1T: m1.getTeilmengen()){
 			for(TeilmengeBM m2T: m2.getTeilmengen()){
-				tmp = (TreeSet<String>) m1T.getEmotions().clone();
+				tmp = (TreeSet<Emotions>) m1T.getEmotions().clone();
 				tmp.retainAll(m2T.getEmotions());
 				teilmengen.add(new TeilmengeBM(tmp, m1T.getEvidenz()*m2T.getEvidenz()));
 			}
@@ -63,7 +63,7 @@ public class Basismas {
 				emptyTBM.add(tbm);
 			}
 		}
-		System.out.println(emptyTBM);
+
 		for(TeilmengeBM tbm: emptyTBM){
 			double korrektur = 1/(1-tbm.getEvidenz());
 			teilmengen.remove(tbm);
@@ -98,7 +98,7 @@ public class Basismas {
 	 * @param emotions
 	 * @return belief
 	 */
-	public double belief(TreeSet<String> emotions) {
+	public double belief(TreeSet<Emotions> emotions) {
 		double belief = 0;
 		for(TeilmengeBM tbm : this.teilmengen)
 			if(tbm.getEmotions().containsAll(emotions))
@@ -113,14 +113,14 @@ public class Basismas {
 	 * @param emotions
 	 * @return Zweifel an in emotions uebergebene Emotionen
 	 */
-	public double zweifel(TreeSet<String> emotions) {
-		TreeSet<String> alternatives = new TreeSet<String>();
-		alternatives.add("angst");
-		alternatives.add("ueberraschung");
-		alternatives.add("wut");
-		alternatives.add("freude");
-		alternatives.add("verachtung");
-		alternatives.add("ekel");
+	public double zweifel(TreeSet<Emotions> emotions) {
+		TreeSet<Emotions> alternatives = new TreeSet<Emotions>();
+		alternatives.add(Emotions.ANGST);
+		alternatives.add(Emotions.UEBERRASCHUNG);
+		alternatives.add(Emotions.WUT);
+		alternatives.add(Emotions.FREUDE);
+		alternatives.add(Emotions.VERACHTUNG);
+		alternatives.add(Emotions.EKEL);
 		
 		alternatives.removeAll(emotions);
 		return belief(alternatives);
@@ -131,12 +131,12 @@ public class Basismas {
 	 * @param emotions
 	 * @return Plausibilitaet
 	 */
-	public double plausibility(TreeSet<String> emotions) {
-		TreeSet<String> tmp;
+	public double plausibility(TreeSet<Emotions> emotions) {
+		TreeSet<Emotions> tmp;
 		double plausibility = 0;
 		
 		for(TeilmengeBM tbm : this.teilmengen) {
-			tmp = (TreeSet<String>)emotions.clone();
+			tmp = (TreeSet<Emotions>)emotions.clone();
 			tmp.retainAll(tbm.getEmotions());
 			if(!tmp.isEmpty())
 				plausibility += tbm.getEvidenz();
@@ -148,14 +148,14 @@ public class Basismas {
 	 * Gibt die Emotion zurueck, fuer die die Belieffunktion den hoechsten Wert ermittelt
 	 * @return
 	 */
-	public String getMostLiklyEmotion() {
-		String emotion = null;
+	public Emotions getMostLiklyEmotion() {
+		Emotions emotion = null;
 		double value = 0;
 		double tmp;
-		String[] emotions = new String[]{"angst","ueberraschung","wut","freude","verachtung","ekel"};
-		TreeSet<String> set = new TreeSet<String>();
+		Emotions[] emotions = Emotions.all();
+		TreeSet<Emotions> set = new TreeSet<Emotions>();
 		
-		for(String s : emotions) {
+		for(Emotions s : emotions) {
 			set.add(s);
 			tmp = this.belief(set);
 			if(tmp > value) {
