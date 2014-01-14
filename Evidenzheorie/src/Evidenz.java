@@ -32,7 +32,7 @@ public class Evidenz {
 		// erster Draft fuer die Festlegung der Basisma√üe, Werte sind voellig
 		// willkuerlich gewaehlt
 		ArrayList<TeilmengeBM> teilmengen = new ArrayList<TeilmengeBM>();
-		double evidenz = berechneEvidenz(minStirn, maxStirn, frame.getPixelStirnfalten);
+		double evidenz = berechneEvidenz(minStirn, maxStirn, frame.getPixelStirnfalten());
 		
 		if (frame.getPixelStirnfalten() <= meanStirn * (1 - tolerance))
 			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.WUT },
@@ -63,22 +63,22 @@ public class Evidenz {
 		m2 = new Basismas("m2", teilmengen);
 
 		/**
-		 * TODO: Angst und Freude genau gleich gewichten oder unterschied
-		 * machen? Beim nicht bewegen bzw nach innen bewegen der Mundwinkel ist
-		 * keine Emotion definiert sollte man dann wirklich die Menge ohne
-		 * Freude und Angst verwenden, oder sollte z.B. Angst ebenfalls
-		 * einflieﬂen, denn erst ist nur "in einigen F‰llen"?
+		 * Angst ist in der Aufgabenstellung definiert als in einigen F‰llen
+		 * zutreffend f¸r den Fall der sich nach ausen bewegenden Mundwinkel
+		 * Daher wurde Angst mit einer geringeren Evidenz zum Basismaﬂ f¸r diesen
+		 * Fall hinzugef¸gt und ist also in dem f¸r sich nich nach auﬂen
+		 * bewegenden Mundwinkel vorhanden.
 		 */
 		teilmengen = new ArrayList<TeilmengeBM>();
 		if (frame.getMundwinkel() > 0) {
-			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.FREUDE,
-					Emotions.ANGST }, 0.4));
-			teilmengen.add(new TeilmengeBM(Emotions.all(), 0.6));
+			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.FREUDE }, 0.4));
+			teilmengen.add(new TeilmengeBM(new Emotions[] {Emotions.ANGST}, 0.2));
+			teilmengen.add(new TeilmengeBM(Emotions.all(), 0.4));
 		}
 		else {
 			teilmengen.add(new TeilmengeBM(new Emotions[] {
 					Emotions.UEBERRASCHUNG, Emotions.WUT, Emotions.VERACHTUNG,
-					Emotions.EKEL }, 0.2));
+					Emotions.EKEL, Emotions.ANGST }, 0.2));
 			teilmengen.add(new TeilmengeBM(Emotions.all(), 0.8));
 		}
 		m3 = new Basismas("m3", teilmengen);
@@ -99,7 +99,7 @@ public class Evidenz {
 		m123.printBasismas();
 	}
 	
-	private void berechneEvidenz(double min, double max, double value) {
+	private double berechneEvidenz(double min, double max, double value) {
 		return 1 / (1 + Math.exp(-((Math.abs((value - min) / (max - min)) * 2 - 1.5))));
 	}
 }
