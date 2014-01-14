@@ -12,33 +12,41 @@ import java.util.TreeSet;
  */
 public class Evidenz {
 	private double meanStirn = 527.5; // Mean aus Testdaten
+	private double stdDeviationStirn = 339.2;
+	private double minStirn = 104;
+	private double maxStirn = 1103;
 	private double meanAugen = 18.02; // Mean aus Testdaten
+	private double stdDeviationAugen = 6.498;
+	private double minAugen = 9;
+	private double maxAugen = 30;
+	private double tolerance = 0.1;
 	private Basismas m1, m2, m3, m12, m123;
 	private Frame frame;
-	/**
-	 * TODO: Emotionen in Enumertion ‰ndern!
-	 */
 	private String[] allEmotions = {"verachtung","ekel","wut","ueberraschung","angst","freude"};
 	public Evidenz(Frame frame) {
 		this.frame = frame;
 		// erster Draft fuer die Festlegung der Basisma√üe, Werte sind voellig willkuerlich gewaehlt
-		/** TODO: Ich wuerde nicht groesser kleiner mean machen, sondern in der Mitte einen Bereich der ebenfalls
-		 * undefiniert ist, z.b. 10-20% der means. 
-		 */
 		ArrayList<TeilmengeBM> teilmengen = new ArrayList<TeilmengeBM>();
-		if(frame.getPixelStirnfalten() <= meanStirn)
-			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.WUT}, 0.4));
+		double evidenz = 1/(1+Math.exp(-((Math.abs((frame.getPixelStirnfalten()-minStirn)/(maxStirn-minStirn))*2-1.5))));
+		if(frame.getPixelStirnfalten() <= meanStirn*(1-tolerance))
+			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.WUT}, evidenz));
+		else if(frame.getPixelStirnfalten() >= meanStirn*(1+tolerance))
+			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.ANGST,Emotions.UEBERRASCHUNG}, evidenz));
 		else
-			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.ANGST,Emotions.UEBERRASCHUNG}, 0.4));
-		teilmengen.add(new TeilmengeBM(Emotions.all(), 0.6));
+			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.EKEL,Emotions.FREUDE,Emotions.VERACHTUNG}, evidenz));
+		teilmengen.add(new TeilmengeBM(Emotions.all(), 1-evidenz));
 		m1 = new Basismas("m1", teilmengen);
 		
 		teilmengen = new ArrayList<TeilmengeBM>();
-		if(frame.getPixelAugen() <= meanAugen)
-			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.VERACHTUNG,Emotions.EKEL}, 0.35));
+		evidenz = 1/(1+Math.exp(-((Math.abs((frame.getPixelAugen()-minAugen)/(maxAugen-minAugen))*2-1.5))));
+		if(frame.getPixelAugen() <= meanAugen*(1-tolerance))
+			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.VERACHTUNG,Emotions.EKEL}, evidenz));
+		else if(frame.getPixelAugen() >= meanAugen*(1+tolerance))
+			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.ANGST,Emotions.UEBERRASCHUNG}, evidenz));
 		else
-			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.ANGST,Emotions.UEBERRASCHUNG}, 0.35));
-		teilmengen.add(new TeilmengeBM(Emotions.all(), 0.65));
+			teilmengen.add(new TeilmengeBM(new Emotions[]{Emotions.WUT,Emotions.FREUDE}, evidenz));
+		
+		teilmengen.add(new TeilmengeBM(Emotions.all(), 1-evidenz));
 		m2 = new Basismas("m2", teilmengen);
 		
 		/**
