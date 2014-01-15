@@ -92,7 +92,7 @@ public class Classification {
 		Basismas m1, m2, m3, m12, m123;
 		
 		ArrayList<TeilmengeBM> teilmengen = new ArrayList<TeilmengeBM>();
-		double evidenz = Statistic.berechneEvidenz(Statistic.getMinStirn(), Statistic.getMaxStirn(), frame.getPixelStirnfalten());
+		double evidenz = Statistic.berechneEvidenzStirn(frame.getPixelStirnfalten());
 		
 		if (frame.getPixelStirnfalten() <= Statistic.getMeanStirn() * (1 - Statistic.getTolerance()))
 			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.WUT },
@@ -107,7 +107,7 @@ public class Classification {
 		m1 = new Basismas("m1", teilmengen);
 
 		teilmengen = new ArrayList<TeilmengeBM>();
-		evidenz = Statistic.berechneEvidenz(Statistic.getMinAugen(), Statistic.getMaxAugen(), frame.getPixelAugen()); 
+		evidenz = Statistic.berechneEvidenzAugen(frame.getPixelAugen()); 
 
 		if (frame.getPixelAugen() <= Statistic.getMeanAugen() * (1 - Statistic.getTolerance()))
 			teilmengen.add(new TeilmengeBM(new Emotions[] {

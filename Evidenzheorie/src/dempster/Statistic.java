@@ -60,7 +60,11 @@ public class  Statistic {
 		return tolerance;
 	}
 
-	public static double berechneEvidenz(double min, double max, double value) {
-		return 1 / (1 + Math.exp(-((Math.abs((value - min) / (max - min)) * 2 - 1.5))));
+	public static double berechneEvidenzAugen(double value) {
+		return 1 / (1 + Math.exp(-((Math.abs((value - minAugen) / (maxAugen - minAugen)) * 2 - 1.5))));
+	}
+	
+	public static double berechneEvidenzStirn(double value) {
+		return 1 / (1 + Math.exp(-((Math.abs((value - minStirn) / (maxStirn - minStirn)) * 2 - 1.5))));
 	}
 }
