@@ -3,26 +3,27 @@ import java.util.TreeSet;
 
 /**
  * 
- * @author Patrick Kalmbach
+ * @author Dennis Schmidt, Patrick Kalmbach
  * 
  * Haelt eine Alternativmenge an Emotionen sowie die defuer errechnete Evidenz.
- * Ist ein Teil eines Basismases
+ * Ist ein Teil eines Basismasses.
  */
 public class TeilmengeBM {	
 	/**
-	 * Enthaelt Emotionen fuer die dieses Basismas erzeugt werden soll
+	 * Enthaelt Emotionen fuer die dieses Basismass erzeugt werden soll.
 	 */
 	private TreeSet<Emotions> emotions;
 	/**
-	 * Die Evidenz die diesem Basismas zugeordnet ist
+	 * Die Evidenz die diesem Basismas zugeordnet ist.
 	 */
 	private double evidenz;
 	
 	/**
-	 * Konstruktor fuer die Klasse Basismas, die ein Basismas der Evidenztheorie
-	 * repraesentiert
-	 * @param emotions
-	 * @param evidenz
+	 * Konstruktor fuer die Klasse TeilmengeBM, die eine Teilmenge eines Basismass
+	 * repraesentiert.
+	 * 
+	 * @param emotions Eine Liste von Emotionen, die die Teilmenge definieren.
+	 * @param evidenz Der Evidenzwert der zu der Teilmenge gehoert.
 	 */
 	public TeilmengeBM(Emotions[] emotions, double evidenz){
 		this.emotions = new TreeSet<Emotions>();
@@ -31,11 +32,21 @@ public class TeilmengeBM {
 		this.evidenz = evidenz;
 	}
 	
+	/**
+	 * Konstruktor fuer die Klasse TeilmengeBM, die eine Teilmenge eines Basismass
+	 * repraesentiert.
+	 * 
+	 * @param emotions Ein Set von Emotionen, das die Teilmenge definieren.
+	 * @param evidenz Der Evidenzwert der zu der Teilmenge gehoert.
+	 */
 	public TeilmengeBM(TreeSet<Emotions> emotions, double evidenz) {
 		this.emotions = emotions;
 		this.evidenz = evidenz;
 	}
 
+	/*
+	 * Getter und Setter.
+	 */
 	public TreeSet<Emotions> getEmotions() {
 		return emotions;
 	}
