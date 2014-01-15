@@ -56,11 +56,6 @@ public class Classification {
 	 */
 	private void readFrames(List<Frame> frames, String path) throws FileNotFoundException {
 		String line;
-		String[] tokens;
-		int id;
-		int stirn;
-		int mund;
-		int augen;
 		FileInputStream instream = null;
 		DataInputStream indata = null;
 		BufferedReader reader = null;
@@ -72,23 +67,8 @@ public class Classification {
 			
 			try {
 				while((line = reader.readLine()) != null) {
-					if(line.matches("\\d*;\\d*;\\d*;\\d*")) {
-						tokens = line.split(";");
-						
-						try{
-							id = Integer.parseInt(tokens[0]);
-							stirn = Integer.parseInt(tokens[1]);
-							mund = Integer.parseInt(tokens[2]);
-							augen = Integer.parseInt(tokens[3]);
-							frames.add(new Frame(id, stirn, mund, augen));
-						}
-						catch(NumberFormatException e) {
-							System.err.println("Could not create frame for data line " + line);
-							e.printStackTrace();
-						}
-					}
+					frames.add(new Frame(line));
 				}
-				
 			}
 			catch(IOException e) {
 				System.err.println("Could not read from file" + path);
@@ -110,7 +90,7 @@ public class Classification {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	/**

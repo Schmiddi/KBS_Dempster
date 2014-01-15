@@ -12,11 +12,22 @@ public class Frame {
 	private int mundwinkel;
 	private int pixelAugen;
 	
-	public Frame(int id, int pixelStirnfalten, int mundwinkel, int pixelAugen) {
-		this.id = id;
-		this.pixelAugen = pixelAugen;
-		this.mundwinkel = mundwinkel;
-		this.pixelStirnfalten = pixelStirnfalten;
+	public Frame(String line) {
+		String[] tokens;
+		if(line.matches("\\d*;\\d*;\\d*;\\d*")) {
+			tokens = line.split(";");
+			
+			try{
+				id = Integer.parseInt(tokens[0]);
+				pixelStirnfalten = Integer.parseInt(tokens[1]);
+				mundwinkel = Integer.parseInt(tokens[2]);
+				pixelAugen = Integer.parseInt(tokens[3]);
+			}
+			catch(NumberFormatException e) {
+				System.err.println("Could not create frame for data line " + line);
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/*
