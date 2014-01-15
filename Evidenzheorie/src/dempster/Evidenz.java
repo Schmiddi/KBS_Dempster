@@ -1,3 +1,4 @@
+package dempster;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -24,9 +25,7 @@ public class Evidenz {
 	private double tolerance = 0.1;
 	private Basismas m1, m2, m3, m12, m123;
 	private Frame frame;
-	private String[] allEmotions = { "verachtung", "ekel", "wut",
-			"ueberraschung", "angst", "freude" };
-
+	
 	public Evidenz(Frame frame) {
 		this.frame = frame;
 		// erster Draft fuer die Festlegung der Basismaße, Werte sind voellig

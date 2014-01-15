@@ -1,3 +1,4 @@
+package dempster;
 public enum Emotions {
 	VERACHTUNG, EKEL, WUT, UEBERRASCHUNG, ANGST, FREUDE;
 	

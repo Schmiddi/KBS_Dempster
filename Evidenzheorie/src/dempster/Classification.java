@@ -1,3 +1,4 @@
+package dempster;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
@@ -35,7 +36,7 @@ public class Classification {
 		for(Evidenz e : evidenzen) {
 			List<Emotions> var = e.getMostLiklyEmotion();
 			for(Emotions em : var)
-				System.out.println("Frame " + e.getFrame().getId() + " --> " + var);
+				System.out.println("Frame " + e.getFrame().getId() + " --> " + em);
 		}
 		/*
 		Evidenz e = new Evidenz(frames.get(30));

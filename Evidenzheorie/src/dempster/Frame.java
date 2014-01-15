@@ -1,6 +1,8 @@
+package dempster;
+
 /**
  * 
- * @author patrick
+ * @author Dennis Schmidt, Patrick Kalmbach
  *
  * Haelt die Informationen fuer einen Frame aus den Daten bereit
  */
@@ -17,6 +19,9 @@ public class Frame {
 		this.pixelStirnfalten = pixelStirnfalten;
 	}
 
+	/*
+	 * Setter und Getter Funktionen
+	 */
 	public int getPixelStirnfalten() {
 		return pixelStirnfalten;
 	}
@@ -43,5 +48,9 @@ public class Frame {
 
 	public int getId() {
 		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }
