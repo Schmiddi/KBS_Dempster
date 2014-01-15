@@ -20,7 +20,7 @@ public class Klassifikation {
 	/**
 	 * Enthaelt alle Frames die in der Quelldatei spezifiziert werden
 	 */
-	List<Frame> frames;
+	private List<Frame> frames;
 	
 	/**
 	 * Konstruktor, Pfad zu der Datei die die Features in der Form
