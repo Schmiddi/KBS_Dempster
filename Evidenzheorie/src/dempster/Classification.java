@@ -14,13 +14,13 @@ import java.util.List;
 public class Classification {
 
 	List<Frame> frames;
-	List<Evidenz> evidenzen;
+	List<List<Emotions>> evidenzen;
 	String path;
 	public Classification() {
 		System.out.println(System.getProperty("user.dir"));
 		path = "bin/data/E_015_train.csv";
 		frames = new ArrayList<Frame>();
-		evidenzen = new ArrayList<Evidenz>();
+		evidenzen = new ArrayList<List<Emotions>>();
 		
 		try {
 			readFrames(frames, path);
@@ -31,13 +31,8 @@ public class Classification {
 		}
 		
 		for(Frame f : frames)
-			evidenzen.add(new Evidenz(f));
-		
-		for(Evidenz e : evidenzen) {
-			List<Emotions> var = e.getMostLiklyEmotion();
-			for(Emotions em : var)
-				System.out.println("Frame " + e.getFrame().getId() + " --> " + em);
-		}
+			System.out.println("Frame " + f.getId() + " --> " + calculateEvidenz(f));
+	
 		/*
 		Evidenz e = new Evidenz(frames.get(30));
 		System.out.println("Frame " + e.getFrame().getId() + " --> " + e.getMostLiklyEmotion());
@@ -91,6 +86,67 @@ public class Classification {
 			}
 		}
 
+	}
+	
+	public List<Emotions> calculateEvidenz(Frame frame){
+		Basismas m1, m2, m3, m12, m123;
+		
+		ArrayList<TeilmengeBM> teilmengen = new ArrayList<TeilmengeBM>();
+		double evidenz = Statistic.berechneEvidenz(Statistic.getMinStirn(), Statistic.getMaxStirn(), frame.getPixelStirnfalten());
+		
+		if (frame.getPixelStirnfalten() <= Statistic.getMeanStirn() * (1 - Statistic.getTolerance()))
+			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.WUT },
+					evidenz));
+		else if (frame.getPixelStirnfalten() >= Statistic.getMeanStirn() * (1 + Statistic.getTolerance()))
+			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.ANGST,
+					Emotions.UEBERRASCHUNG }, evidenz));
+		else
+			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.EKEL,
+					Emotions.FREUDE, Emotions.VERACHTUNG }, evidenz));
+		teilmengen.add(new TeilmengeBM(Emotions.all(), 1 - evidenz));
+		m1 = new Basismas("m1", teilmengen);
+
+		teilmengen = new ArrayList<TeilmengeBM>();
+		evidenz = Statistic.berechneEvidenz(Statistic.getMinAugen(), Statistic.getMaxAugen(), frame.getPixelAugen()); 
+
+		if (frame.getPixelAugen() <= Statistic.getMeanAugen() * (1 - Statistic.getTolerance()))
+			teilmengen.add(new TeilmengeBM(new Emotions[] {
+					Emotions.VERACHTUNG, Emotions.EKEL }, evidenz));
+		else if (frame.getPixelAugen() >= Statistic.getMeanAugen() * (1 + Statistic.getTolerance()))
+			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.ANGST,
+					Emotions.UEBERRASCHUNG }, evidenz));
+		else
+			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.WUT,
+					Emotions.FREUDE }, evidenz));
+
+		teilmengen.add(new TeilmengeBM(Emotions.all(), 1 - evidenz));
+		m2 = new Basismas("m2", teilmengen);
+
+		/**
+		 * Angst ist in der Aufgabenstellung definiert als in einigen Fällen
+		 * zutreffend für den Fall der sich nach ausen bewegenden Mundwinkel
+		 * Daher wurde Angst mit einer geringeren Evidenz zum Basismaß für diesen
+		 * Fall hinzugefügt und ist also in dem für sich nich nach außen
+		 * bewegenden Mundwinkel vorhanden.
+		 */
+		teilmengen = new ArrayList<TeilmengeBM>();
+		if (frame.getMundwinkel() > 0) {
+			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.FREUDE }, 0.4));
+			teilmengen.add(new TeilmengeBM(new Emotions[] {Emotions.ANGST}, 0.2));
+			teilmengen.add(new TeilmengeBM(Emotions.all(), 0.4));
+		}
+		else {
+			teilmengen.add(new TeilmengeBM(new Emotions[] {
+					Emotions.UEBERRASCHUNG, Emotions.WUT, Emotions.VERACHTUNG,
+					Emotions.EKEL, Emotions.ANGST }, 0.2));
+			teilmengen.add(new TeilmengeBM(Emotions.all(), 0.8));
+		}
+		m3 = new Basismas("m3", teilmengen);
+
+		m12 = new Basismas("m12", m1, m2);
+		m123 = new Basismas("m123", m12, m3);
+		
+		return m123.getMostLiklyEmotion();
 	}
 
 	/**
