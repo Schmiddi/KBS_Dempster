@@ -7,7 +7,7 @@ package dempster;
  * Enumeration die die einzelnen Emotionen speichert.
  *
  */
-public enum Emotions {
+public enum Emotion {
 	VERACHTUNG, EKEL, WUT, UEBERRASCHUNG, ANGST, FREUDE;
 	
 	/**
@@ -34,7 +34,7 @@ public enum Emotions {
 	 * 
 	 * @return Eine Liste die alle Emotionen enthaelt.
 	 */
-	public static Emotions[] all(){
-		return new Emotions[]{VERACHTUNG,EKEL,WUT,UEBERRASCHUNG,ANGST,FREUDE};
+	public static Emotion[] all(){
+		return new Emotion[]{VERACHTUNG,EKEL,WUT,UEBERRASCHUNG,ANGST,FREUDE};
 	}
 }

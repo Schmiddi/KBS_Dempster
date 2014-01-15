@@ -57,10 +57,10 @@ public class Basismass {
 		this.name = name;
 		this.teilmengen = new ArrayList<TeilmengeBM>();
 		
-		TreeSet<Emotions> tmp;
+		TreeSet<Emotion> tmp;
 		for(TeilmengeBM m1T: m1.getTeilmengen()){
 			for(TeilmengeBM m2T: m2.getTeilmengen()){
-				tmp = (TreeSet<Emotions>) m1T.getEmotions().clone();
+				tmp = (TreeSet<Emotion>) m1T.getEmotions().clone();
 				tmp.retainAll(m2T.getEmotions());
 				teilmengen.add(new TeilmengeBM(tmp, m1T.getEvidenz()*m2T.getEvidenz()));
 			}
@@ -112,7 +112,7 @@ public class Basismass {
 	 * @param emotions
 	 * @return belief
 	 */
-	public double glaube(TreeSet<Emotions> emotions) {
+	public double glaube(TreeSet<Emotion> emotions) {
 		double belief = 0;
 		for(TeilmengeBM tbm : this.teilmengen)
 			if(tbm.getEmotions().containsAll(emotions))
@@ -127,14 +127,14 @@ public class Basismass {
 	 * @param emotions	Menge von Emotionen fuer die der Zweifel berechnet werden soll
 	 * @return 			Zweifel an in emotions uebergebene Emotionen
 	 */
-	public double zweifel(TreeSet<Emotions> emotions) {
-		TreeSet<Emotions> alternatives = new TreeSet<Emotions>();
-		alternatives.add(Emotions.ANGST);
-		alternatives.add(Emotions.UEBERRASCHUNG);
-		alternatives.add(Emotions.WUT);
-		alternatives.add(Emotions.FREUDE);
-		alternatives.add(Emotions.VERACHTUNG);
-		alternatives.add(Emotions.EKEL);
+	public double zweifel(TreeSet<Emotion> emotions) {
+		TreeSet<Emotion> alternatives = new TreeSet<Emotion>();
+		alternatives.add(Emotion.ANGST);
+		alternatives.add(Emotion.UEBERRASCHUNG);
+		alternatives.add(Emotion.WUT);
+		alternatives.add(Emotion.FREUDE);
+		alternatives.add(Emotion.VERACHTUNG);
+		alternatives.add(Emotion.EKEL);
 		
 		alternatives.removeAll(emotions);
 		return glaube(alternatives);
@@ -146,12 +146,12 @@ public class Basismass {
 	 * @return 			Plausibilitaet
 	 */
 	@SuppressWarnings("unchecked")
-	public double plausibilitaet(TreeSet<Emotions> emotions) {
-		TreeSet<Emotions> tmp;
+	public double plausibilitaet(TreeSet<Emotion> emotions) {
+		TreeSet<Emotion> tmp;
 		double plausibility = 0;
 		
 		for(TeilmengeBM tbm : this.teilmengen) {
-			tmp = (TreeSet<Emotions>)emotions.clone();
+			tmp = (TreeSet<Emotion>)emotions.clone();
 			tmp.retainAll(tbm.getEmotions());
 			if(!tmp.isEmpty())
 				plausibility += tbm.getEvidenz();
@@ -163,14 +163,14 @@ public class Basismass {
 	 * Gibt die Emotion zurueck, fuer die der Glaube maximal ist
 	 * @return	Liste von Emotionen mit fuer die der Glaube maximal ist
 	 */
-	public List<Emotions> getMostLikelyEmotion() {
-		List<Emotions> emotion = new ArrayList<Emotions>();
+	public List<Emotion> getMostLikelyEmotion() {
+		List<Emotion> emotion = new ArrayList<Emotion>();
 		double value = 0;
 		double tmp;
-		Emotions[] emotions = Emotions.all();
-		TreeSet<Emotions> set = new TreeSet<Emotions>();
+		Emotion[] emotions = Emotion.all();
+		TreeSet<Emotion> set = new TreeSet<Emotion>();
 		
-		for(Emotions s : emotions) {
+		for(Emotion s : emotions) {
 			set.add(s);
 			tmp = this.glaube(set);
 			if(tmp >= value) {

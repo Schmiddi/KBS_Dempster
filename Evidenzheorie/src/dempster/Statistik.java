@@ -2,12 +2,12 @@ package dempster;
 /**
  * @author Dennis Schmidt, Patrick Kalmbach
  * 
- * Statistic enthaelt alle fuer die Berechnung der Evidenz notwenidgen Werte
+ * Statistik enthaelt alle fuer die Berechnung der Evidenz notwenidgen Werte
  * sowie die Funktion die die Evidenz der Augenoeffnung und der Stirnfalten
  * berechnet. 
  * 
  */
-public class  Statistic {
+public class  Statistik {
 	/*
 	 * Statistische Werte fuer die Anzahl an Stirnfalten, die aus den 
 	 * Trainingsdaten ermittelt wurden.

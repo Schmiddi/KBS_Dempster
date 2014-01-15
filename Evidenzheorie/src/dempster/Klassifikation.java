@@ -15,7 +15,7 @@ import java.util.List;
  * @author Dennis Schmidt, Patrick Kalmbach
  *
  */
-public class Classification {
+public class Klassifikation {
 	
 	/**
 	 * Enthaelt alle Frames die in der Quelldatei spezifiziert werden
@@ -28,7 +28,7 @@ public class Classification {
 	 * Frames werden ausgelesen, Evidenzen berechnet und ausgegeben
 	 * @param pfad	Pfad zu der Datei die Feature enthaelt
 	 */
-	public Classification(String pfad) {
+	public Klassifikation(String pfad) {
 		frames = new ArrayList<Frame>();
 		
 		try {
@@ -102,38 +102,38 @@ public class Classification {
 	 * @param frame	Frame fuer den die dargestellte Emotione ermittelt werden soll
 	 * @return		Emotionen fuer die der Glaube maximal ist
 	 */
-	public List<Emotions> calculateEvidenz(Frame frame){
+	public List<Emotion> calculateEvidenz(Frame frame){
 		Basismass m1, m2, m3, m12, m123;
 		
 		ArrayList<TeilmengeBM> teilmengen = new ArrayList<TeilmengeBM>();
-		double evidenz = Statistic.berechneEvidenzStirn(frame.getPixelStirnfalten());
+		double evidenz = Statistik.berechneEvidenzStirn(frame.getPixelStirnfalten());
 		
-		if (frame.getPixelStirnfalten() <= Statistic.getMeanStirn() * (1 - Statistic.getTolerance()))
-			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.WUT },
+		if (frame.getPixelStirnfalten() <= Statistik.getMeanStirn() * (1 - Statistik.getTolerance()))
+			teilmengen.add(new TeilmengeBM(new Emotion[] { Emotion.WUT },
 					evidenz));
-		else if (frame.getPixelStirnfalten() >= Statistic.getMeanStirn() * (1 + Statistic.getTolerance()))
-			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.ANGST,
-					Emotions.UEBERRASCHUNG }, evidenz));
+		else if (frame.getPixelStirnfalten() >= Statistik.getMeanStirn() * (1 + Statistik.getTolerance()))
+			teilmengen.add(new TeilmengeBM(new Emotion[] { Emotion.ANGST,
+					Emotion.UEBERRASCHUNG }, evidenz));
 		else
-			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.EKEL,
-					Emotions.FREUDE, Emotions.VERACHTUNG }, evidenz));
-		teilmengen.add(new TeilmengeBM(Emotions.all(), 1 - evidenz));
+			teilmengen.add(new TeilmengeBM(new Emotion[] { Emotion.EKEL,
+					Emotion.FREUDE, Emotion.VERACHTUNG }, evidenz));
+		teilmengen.add(new TeilmengeBM(Emotion.all(), 1 - evidenz));
 		m1 = new Basismass("m1", teilmengen);
 
 		teilmengen = new ArrayList<TeilmengeBM>();
-		evidenz = Statistic.berechneEvidenzAugen(frame.getPixelAugen()); 
+		evidenz = Statistik.berechneEvidenzAugen(frame.getPixelAugen()); 
 
-		if (frame.getPixelAugen() <= Statistic.getMeanAugen() * (1 - Statistic.getTolerance()))
-			teilmengen.add(new TeilmengeBM(new Emotions[] {
-					Emotions.VERACHTUNG, Emotions.EKEL }, evidenz));
-		else if (frame.getPixelAugen() >= Statistic.getMeanAugen() * (1 + Statistic.getTolerance()))
-			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.ANGST,
-					Emotions.UEBERRASCHUNG }, evidenz));
+		if (frame.getPixelAugen() <= Statistik.getMeanAugen() * (1 - Statistik.getTolerance()))
+			teilmengen.add(new TeilmengeBM(new Emotion[] {
+					Emotion.VERACHTUNG, Emotion.EKEL }, evidenz));
+		else if (frame.getPixelAugen() >= Statistik.getMeanAugen() * (1 + Statistik.getTolerance()))
+			teilmengen.add(new TeilmengeBM(new Emotion[] { Emotion.ANGST,
+					Emotion.UEBERRASCHUNG }, evidenz));
 		else
-			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.WUT,
-					Emotions.FREUDE }, evidenz));
+			teilmengen.add(new TeilmengeBM(new Emotion[] { Emotion.WUT,
+					Emotion.FREUDE }, evidenz));
 
-		teilmengen.add(new TeilmengeBM(Emotions.all(), 1 - evidenz));
+		teilmengen.add(new TeilmengeBM(Emotion.all(), 1 - evidenz));
 		m2 = new Basismass("m2", teilmengen);
 
 		/*
@@ -145,15 +145,15 @@ public class Classification {
 		 */
 		teilmengen = new ArrayList<TeilmengeBM>();
 		if (frame.getMundwinkel() > 0) {
-			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.FREUDE }, 0.4));
-			teilmengen.add(new TeilmengeBM(new Emotions[] {Emotions.ANGST}, 0.2));
-			teilmengen.add(new TeilmengeBM(Emotions.all(), 0.4));
+			teilmengen.add(new TeilmengeBM(new Emotion[] { Emotion.FREUDE }, 0.4));
+			teilmengen.add(new TeilmengeBM(new Emotion[] {Emotion.ANGST}, 0.2));
+			teilmengen.add(new TeilmengeBM(Emotion.all(), 0.4));
 		}
 		else {
-			teilmengen.add(new TeilmengeBM(new Emotions[] {
-					Emotions.UEBERRASCHUNG, Emotions.WUT, Emotions.VERACHTUNG,
-					Emotions.EKEL, Emotions.ANGST }, 0.2));
-			teilmengen.add(new TeilmengeBM(Emotions.all(), 0.8));
+			teilmengen.add(new TeilmengeBM(new Emotion[] {
+					Emotion.UEBERRASCHUNG, Emotion.WUT, Emotion.VERACHTUNG,
+					Emotion.EKEL, Emotion.ANGST }, 0.2));
+			teilmengen.add(new TeilmengeBM(Emotion.all(), 0.8));
 		}
 		m3 = new Basismass("m3", teilmengen);
 
@@ -169,7 +169,7 @@ public class Classification {
 	 */
 	public static void main(String[] args) {
 		if(args.length == 1)
-			new Classification(args[0]);
+			new Klassifikation(args[0]);
 		else
 			System.err.println("Pfad zu der Datei mit aufbereiteten Featuren der" +
 					" Frames im Format <id>;<Pixel Stirnfalten>;<Mundwinkel>;<Pixel Augenoeffnung>" +
