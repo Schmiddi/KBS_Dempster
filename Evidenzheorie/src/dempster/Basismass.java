@@ -60,8 +60,8 @@ public class Basismass {
 		TreeSet<Emotion> tmp;
 		for(TeilmengeBM m1T: m1.getTeilmengen()){
 			for(TeilmengeBM m2T: m2.getTeilmengen()){
-				tmp = (TreeSet<Emotion>) m1T.getEmotions().clone();
-				tmp.retainAll(m2T.getEmotions());
+				tmp = (TreeSet<Emotion>) m1T.getEmotionen().clone();
+				tmp.retainAll(m2T.getEmotionen());
 				teilmengen.add(new TeilmengeBM(tmp, m1T.getEvidenz()*m2T.getEvidenz()));
 			}
 		}
@@ -71,7 +71,7 @@ public class Basismass {
 		
 		// Suche nach leeren Teilmengen und fuege sie der Liste emptyTBM hinzu
 		for(TeilmengeBM tbm: teilmengen){
-			if(tbm.getEmotions().isEmpty()){
+			if(tbm.getEmotionen().isEmpty()){
 				emptyTBM.add(tbm);
 			}
 		}
@@ -109,13 +109,13 @@ public class Basismass {
 	
 	/**
 	 * Errechnet den Glaube an eine uebergeben alternativenmenge
-	 * @param emotions
+	 * @param emotionen
 	 * @return belief
 	 */
-	public double glaube(TreeSet<Emotion> emotions) {
+	public double glaube(TreeSet<Emotion> emotionen) {
 		double belief = 0;
 		for(TeilmengeBM tbm : this.teilmengen)
-			if(tbm.getEmotions().containsAll(emotions))
+			if(tbm.getEmotionen().containsAll(emotionen))
 				belief += tbm.getEvidenz();
 		return belief;
 	}
@@ -124,10 +124,10 @@ public class Basismass {
 	 * Errechnet den Zweifel an eine uebergebene Menge. Der Zweifel ist definiert als 
 	 * der Glaube an die Alternativmenge der Menge, hier also an alle Emotionen ausser an
 	 * die, die mit emotions uebergeben wurden.
-	 * @param emotions	Menge von Emotionen fuer die der Zweifel berechnet werden soll
+	 * @param emotionen	Menge von Emotionen fuer die der Zweifel berechnet werden soll
 	 * @return 			Zweifel an in emotions uebergebene Emotionen
 	 */
-	public double zweifel(TreeSet<Emotion> emotions) {
+	public double zweifel(TreeSet<Emotion> emotionen) {
 		TreeSet<Emotion> alternatives = new TreeSet<Emotion>();
 		alternatives.add(Emotion.ANGST);
 		alternatives.add(Emotion.UEBERRASCHUNG);
@@ -136,23 +136,23 @@ public class Basismass {
 		alternatives.add(Emotion.VERACHTUNG);
 		alternatives.add(Emotion.EKEL);
 		
-		alternatives.removeAll(emotions);
+		alternatives.removeAll(emotionen);
 		return glaube(alternatives);
 	}
 	
 	/**
 	 * Gibt die Plausibilitaet einer Menge von Emotionen zurueck
-	 * @param emotions	Menge von Emotionen fuer die die Plausibilitaet berechnet werden soll
+	 * @param emotionen	Menge von Emotionen fuer die die Plausibilitaet berechnet werden soll
 	 * @return 			Plausibilitaet
 	 */
 	@SuppressWarnings("unchecked")
-	public double plausibilitaet(TreeSet<Emotion> emotions) {
+	public double plausibilitaet(TreeSet<Emotion> emotionen) {
 		TreeSet<Emotion> tmp;
 		double plausibility = 0;
 		
 		for(TeilmengeBM tbm : this.teilmengen) {
-			tmp = (TreeSet<Emotion>)emotions.clone();
-			tmp.retainAll(tbm.getEmotions());
+			tmp = (TreeSet<Emotion>)emotionen.clone();
+			tmp.retainAll(tbm.getEmotionen());
 			if(!tmp.isEmpty())
 				plausibility += tbm.getEvidenz();
 		}
@@ -190,7 +190,7 @@ public class Basismass {
 	public void printBasismass(){
 		System.out.println("-----"+this.name+"-----");
 		for(TeilmengeBM tbm: this.teilmengen){
-			System.out.println("\t# "+tbm.getEmotions().toString()+": "+tbm.getEvidenz());
+			System.out.println("\t# "+tbm.getEmotionen().toString()+": "+tbm.getEvidenz());
 		}
 	}
 }

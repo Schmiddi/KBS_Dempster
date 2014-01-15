@@ -46,7 +46,7 @@ public class Klassifikation {
 		}
 		
 		for(Frame f : frames)
-			System.out.println("Frame " + f.getId() + " --> " + calculateEvidenz(f));
+			System.out.println("Frame " + f.getId() + " --> " + berechneEvidenz(f));
 	}
 	
 	/**
@@ -102,7 +102,7 @@ public class Klassifikation {
 	 * @param frame	Frame fuer den die dargestellte Emotione ermittelt werden soll
 	 * @return		Emotionen fuer die der Glaube maximal ist
 	 */
-	public List<Emotion> calculateEvidenz(Frame frame){
+	public List<Emotion> berechneEvidenz(Frame frame){
 		Basismass m1, m2, m3, m12, m123;
 		
 		ArrayList<TeilmengeBM> teilmengen = new ArrayList<TeilmengeBM>();
