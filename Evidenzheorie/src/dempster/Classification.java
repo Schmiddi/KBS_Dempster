@@ -1,42 +1,45 @@
 package dempster;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 public class Classification {
-
+	
+	/**
+	 * Enthaelt alle Frames die in der Quelldatei spezifiziert werden
+	 */
 	List<Frame> frames;
-	List<List<Emotions>> evidenzen;
-	String path;
-	public Classification() {
-		System.out.println(System.getProperty("user.dir"));
-		path = "bin/data/E_015_train.csv";
+	
+	/**
+	 * Konstruktor, Pfad zu der Datei die die Features in der Form
+	 * <id>;<Pixel Stirnfalten>;<Mundwinkel>;<Pixel Augenoeffnung> enthaelt.
+	 * Frames werden ausgelesen, Evidenzen berechnet und ausgegeben
+	 * @param pfad	Pfad zu der Datei die Feature enthaelt
+	 */
+	public Classification(String pfad) {
 		frames = new ArrayList<Frame>();
-		evidenzen = new ArrayList<List<Emotions>>();
 		
 		try {
-			readFrames(frames, path);
+			readFrames(pfad);
 		}
-		catch(Exception e) {
-			System.err.println("Not able to read from file, abort");
+		catch(FileNotFoundException e) {
+			System.err.println("Die Datei " + pfad + " wurde nicht gefunden! Abbruch");
+			e.printStackTrace();
+			return;			
+		}
+		catch(IOException e) {
+			System.err.println("Die Datei " + pfad + " konnte nicht gelesen werden! Abbruch");
+			e.printStackTrace();
 			return;
 		}
 		
 		for(Frame f : frames)
 			System.out.println("Frame " + f.getId() + " --> " + calculateEvidenz(f));
-	
-		/*
-		Evidenz e = new Evidenz(frames.get(30));
-		System.out.println("Frame " + e.getFrame().getId() + " --> " + e.getMostLiklyEmotion());
-		e.printM123();*/
 	}
 	
 	/**
@@ -44,19 +47,19 @@ public class Classification {
 	 * in nachfolgendem Format gespeichert sind aus und erzeugt daraus Frame objekte fuer
 	 * die weitere Verarbeitung.
 	 * Kann die Datei nicht gefunden oder von ihr gelesen werden wird eine Exception erzeugt
-	 * Format: <id>;<Pixel stirnfalten>;<mundwinkel>;<Pixel Augen offen>
-	 * @param frames
-	 * @param path
-	 * @throws FileNotFoundException
+	 * Format: <id>;<Pixel Stirnfalten>;<Mundwinkel>;<Pixel Augenoeffnung>
+	 * @param pfad						Pfad zu der Datei die Feature enthaelt
+	 * @throws FileNotFoundException	Datei wurde nicht gefunden
+	 * @throws IOException				Es konnte nicht von der Datei gelesen werden
 	 */
-	private void readFrames(List<Frame> frames, String path) throws FileNotFoundException {
+	private void readFrames(String pfad) throws FileNotFoundException, IOException {
 		String line;
 		FileInputStream instream = null;
 		DataInputStream indata = null;
 		BufferedReader reader = null;
 		
 		try {
-			instream = new FileInputStream(path);
+			instream = new FileInputStream(pfad);
 			indata = new DataInputStream(instream);
 			reader = new BufferedReader(new InputStreamReader(indata));
 			
@@ -66,14 +69,10 @@ public class Classification {
 				}
 			}
 			catch(IOException e) {
-				System.err.println("Could not read from file" + path);
-				e.printStackTrace();
-				throw new FileNotFoundException();
+				throw e;
 			}
 		} 
 		catch (FileNotFoundException e) {
-			System.err.println("Could not open file " + path);
-			e.printStackTrace();
 			throw e;
 		}
 		finally {
@@ -88,8 +87,16 @@ public class Classification {
 
 	}
 	
+	/**
+	 * Erstellt die fuer die Erkennung von der in dem Frame dargestellten
+	 * Emotion benoetigten Basismasse, akkumuliert diese und wendet die Konfliktregel
+	 * an.
+	 * 
+	 * @param frame	Frame fuer den die dargestellte Emotione ermittelt werden soll
+	 * @return		Emotionen fuer die der Glaube maximal ist
+	 */
 	public List<Emotions> calculateEvidenz(Frame frame){
-		Basismas m1, m2, m3, m12, m123;
+		Basismass m1, m2, m3, m12, m123;
 		
 		ArrayList<TeilmengeBM> teilmengen = new ArrayList<TeilmengeBM>();
 		double evidenz = Statistic.berechneEvidenzStirn(frame.getPixelStirnfalten());
@@ -104,7 +111,7 @@ public class Classification {
 			teilmengen.add(new TeilmengeBM(new Emotions[] { Emotions.EKEL,
 					Emotions.FREUDE, Emotions.VERACHTUNG }, evidenz));
 		teilmengen.add(new TeilmengeBM(Emotions.all(), 1 - evidenz));
-		m1 = new Basismas("m1", teilmengen);
+		m1 = new Basismass("m1", teilmengen);
 
 		teilmengen = new ArrayList<TeilmengeBM>();
 		evidenz = Statistic.berechneEvidenzAugen(frame.getPixelAugen()); 
@@ -120,9 +127,9 @@ public class Classification {
 					Emotions.FREUDE }, evidenz));
 
 		teilmengen.add(new TeilmengeBM(Emotions.all(), 1 - evidenz));
-		m2 = new Basismas("m2", teilmengen);
+		m2 = new Basismass("m2", teilmengen);
 
-		/**
+		/*
 		 * Angst ist in der Aufgabenstellung definiert als in einigen Fällen
 		 * zutreffend für den Fall der sich nach ausen bewegenden Mundwinkel
 		 * Daher wurde Angst mit einer geringeren Evidenz zum Basismaß für diesen
@@ -141,19 +148,25 @@ public class Classification {
 					Emotions.EKEL, Emotions.ANGST }, 0.2));
 			teilmengen.add(new TeilmengeBM(Emotions.all(), 0.8));
 		}
-		m3 = new Basismas("m3", teilmengen);
+		m3 = new Basismass("m3", teilmengen);
 
-		m12 = new Basismas("m12", m1, m2);
-		m123 = new Basismas("m123", m12, m3);
+		m12 = new Basismass("m12", m1, m2);
+		m123 = new Basismass("m123", m12, m3);
 		
-		return m123.getMostLiklyEmotion();
+		return m123.getMostLikelyEmotion();
 	}
 
 	/**
-	 * @param args
+	 * @param args arg[0] muss Pfad zu der Datei in der die Frames spezifiziert werden
+	 * 				enthalten
 	 */
 	public static void main(String[] args) {
-		new Classification();
+		if(args.length == 1)
+			new Classification(args[0]);
+		else
+			System.err.println("Pfad zu der Datei mit aufbereiteten Featuren der" +
+					" Frames im Format <id>;<Pixel Stirnfalten>;<Mundwinkel>;<Pixel Augenoeffnung>" +
+					" muss als erstes und einziges Argument angegeben werden! Abbruch");
 	}
 
 }
