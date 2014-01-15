@@ -91,7 +91,7 @@ public class Evidenz {
 		return frame;
 	}
 
-	public Emotions getMostLiklyEmotion() {
+	public List<Emotions> getMostLiklyEmotion() {
 		return m123.getMostLiklyEmotion();
 	}
 
