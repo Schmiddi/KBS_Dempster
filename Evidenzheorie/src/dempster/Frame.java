@@ -33,7 +33,7 @@ public class Frame {
 	 */
 	public Frame(String line) {
 		String[] tokens;
-		if(line.matches("\\d*;\\d*;\\d*;\\d*")) {
+		if(line.matches("\\d+;\\d+;-?\\d+;\\d+")) {
 			tokens = line.split(";");
 			
 			try{
