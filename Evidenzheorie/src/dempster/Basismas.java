@@ -8,10 +8,9 @@ import java.util.TreeSet;
  *
  * Haelt eine Alternativmenge an Emotionen sowie die dafuer errechnete Evidenz
  */
-public class Basismas {
+public class Basismass {
 	/**
-	 * Liste mit allen Teilmengen einschlieﬂlich Omega,
-	 * kein Set das es identische Teilmengen geben kann.
+	 * Liste mit allen Teilmengen einschlieﬂlich Omega.
 	 */
 	private ArrayList<TeilmengeBM> teilmengen;
 	
@@ -20,24 +19,37 @@ public class Basismas {
 	 */
 	private String name;
 	
-	public Basismas(String name){
+	/**
+	 * Konstruktor, nimmt einen Bezeichner fuer das Basismass entgegen und
+	 * initialisiert eine leere Liste fuer die einzelnen Alternativmengen
+	 * @param name	Bezeichner des Basismass
+	 */
+	public Basismass(String name){
 		this.name = name;
 		this.teilmengen = new ArrayList<TeilmengeBM>();
 	}
 	
-	public Basismas(String name, ArrayList<TeilmengeBM> teilmengen){
+	/**
+	 * Konstruktor, nimmt einen Bezeichner fuer das Basismass und eine Liste von
+	 * Alternativmengen entgegen
+	 * @param name			Bezeichner des Basismass
+	 * @param teilmengen	Alternativmengen des Basimass
+	 */
+	public Basismass(String name, ArrayList<TeilmengeBM> teilmengen){
 		this.name = name;
 		this.teilmengen = teilmengen;
 	}
 	
 	/**
-	 * Erzeugt ein neues Basismas durch akkumulation von zwei Basismasen
+	 * Erzeugt ein neues Basismas durch akkumulation von zweier existierender
+	 * Basismasse
 	 * 
-	 * @param name	 Name des Basismases
-	 * @param m1	Das erste Basismas
-	 * @param m2	Das zweite Basismas
+	 * @param name	Bezeichner des Basismasses
+	 * @param m1	Das erste Basismass
+	 * @param m2	Das zweite Basismass
 	 */
-	public Basismas(String name, Basismas m1, Basismas m2){
+	@SuppressWarnings("unchecked")
+	public Basismass(String name, Basismass m1, Basismass m2){
 		// Erzeugen der Akkumulation, der Umweg ueber die tmp Varable ist notwendig, da Java keine
 		// Funktion bietet, die die Schnittmenge zweier Mengen zurueckgibt, mit retainAll werden nur die
 		// Elemente aus einem Set entfernt, welche NICHT im zweiten (dem das der Funktion uebergeben wird)
@@ -57,12 +69,15 @@ public class Basismas {
 		// Alle Teilmengen nach Leerenmengen durch suchen und korrigieren.
 		ArrayList<TeilmengeBM> emptyTBM = new ArrayList<TeilmengeBM>();
 		
+		// Suche nach leeren Teilmengen und fuege sie der Liste emptyTBM hinzu
 		for(TeilmengeBM tbm: teilmengen){
 			if(tbm.getEmotions().isEmpty()){
 				emptyTBM.add(tbm);
 			}
 		}
-
+		
+		// Fuer jede leere Teilmenge wende die Konfliktregel auf alle
+		// Teilmengen an
 		for(TeilmengeBM tbm: emptyTBM){
 			double korrektur = 1/(1-tbm.getEvidenz());
 			teilmengen.remove(tbm);
@@ -93,11 +108,11 @@ public class Basismas {
 	}
 	
 	/**
-	 * Errechnet den Belief an eine uebergeben alternativenmenge
+	 * Errechnet den Glaube an eine uebergeben alternativenmenge
 	 * @param emotions
 	 * @return belief
 	 */
-	public double belief(TreeSet<Emotions> emotions) {
+	public double glaube(TreeSet<Emotions> emotions) {
 		double belief = 0;
 		for(TeilmengeBM tbm : this.teilmengen)
 			if(tbm.getEmotions().containsAll(emotions))
@@ -107,10 +122,10 @@ public class Basismas {
 	
 	/**
 	 * Errechnet den Zweifel an eine uebergebene Menge. Der Zweifel ist definiert als 
-	 * der Glaube (belief) an die Alternativmenge der Menge, hier also an alle Emotionen auser an
+	 * der Glaube an die Alternativmenge der Menge, hier also an alle Emotionen ausser an
 	 * die, die mit emotions uebergeben wurden.
-	 * @param emotions
-	 * @return Zweifel an in emotions uebergebene Emotionen
+	 * @param emotions	Menge von Emotionen fuer die der Zweifel berechnet werden soll
+	 * @return 			Zweifel an in emotions uebergebene Emotionen
 	 */
 	public double zweifel(TreeSet<Emotions> emotions) {
 		TreeSet<Emotions> alternatives = new TreeSet<Emotions>();
@@ -122,15 +137,16 @@ public class Basismas {
 		alternatives.add(Emotions.EKEL);
 		
 		alternatives.removeAll(emotions);
-		return belief(alternatives);
+		return glaube(alternatives);
 	}
 	
 	/**
 	 * Gibt die Plausibilitaet einer Menge von Emotionen zurueck
-	 * @param emotions
-	 * @return Plausibilitaet
+	 * @param emotions	Menge von Emotionen fuer die die Plausibilitaet berechnet werden soll
+	 * @return 			Plausibilitaet
 	 */
-	public double plausibility(TreeSet<Emotions> emotions) {
+	@SuppressWarnings("unchecked")
+	public double plausibilitaet(TreeSet<Emotions> emotions) {
 		TreeSet<Emotions> tmp;
 		double plausibility = 0;
 		
@@ -144,10 +160,10 @@ public class Basismas {
 	}
 	
 	/**
-	 * Gibt die Emotion zurueck, fuer die die Belieffunktion den hoechsten Wert ermittelt
-	 * @return
+	 * Gibt die Emotion zurueck, fuer die der Glaube maximal ist
+	 * @return	Liste von Emotionen mit fuer die der Glaube maximal ist
 	 */
-	public List<Emotions> getMostLiklyEmotion() {
+	public List<Emotions> getMostLikelyEmotion() {
 		List<Emotions> emotion = new ArrayList<Emotions>();
 		double value = 0;
 		double tmp;
@@ -156,7 +172,7 @@ public class Basismas {
 		
 		for(Emotions s : emotions) {
 			set.add(s);
-			tmp = this.belief(set);
+			tmp = this.glaube(set);
 			if(tmp >= value) {
 				value = tmp;
 				emotion.add(s);
@@ -167,10 +183,14 @@ public class Basismas {
 		return emotion;
 	}
 	
-	public void printBasismas(){
+	/**
+	 * Gibt den Namen des Basismasses sowie enthaltene Teilmengen mit zugehoeriger
+	 * Evidenz aus
+	 */
+	public void printBasismass(){
 		System.out.println("-----"+this.name+"-----");
 		for(TeilmengeBM tbm: this.teilmengen){
-			System.out.println("# "+tbm.getEmotions().toString()+": "+tbm.getEvidenz());
+			System.out.println("\t# "+tbm.getEmotions().toString()+": "+tbm.getEvidenz());
 		}
 	}
 }
