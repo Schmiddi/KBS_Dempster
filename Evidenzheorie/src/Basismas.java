@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 /**
  * 
@@ -145,8 +146,8 @@ public class Basismas {
 	 * Gibt die Emotion zurueck, fuer die die Belieffunktion den hoechsten Wert ermittelt
 	 * @return
 	 */
-	public Emotions getMostLiklyEmotion() {
-		Emotions emotion = null;
+	public List<Emotions> getMostLiklyEmotion() {
+		List<Emotions> emotion = new ArrayList<Emotions>();
 		double value = 0;
 		double tmp;
 		Emotions[] emotions = Emotions.all();
@@ -155,9 +156,9 @@ public class Basismas {
 		for(Emotions s : emotions) {
 			set.add(s);
 			tmp = this.belief(set);
-			if(tmp > value) {
+			if(tmp >= value) {
 				value = tmp;
-				emotion = s;
+				emotion.add(s);
 			}
 			set.clear();
 		}
