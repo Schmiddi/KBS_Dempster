@@ -7,11 +7,30 @@ package dempster;
  * Haelt die Informationen fuer einen Frame aus den Daten bereit
  */
 public class Frame {
+	/**
+	 * Die Nummer des Frames.
+	 */
 	private int id;
+	/**
+	 * Die Anzahl an Stirnfalten.
+	 */
 	private int pixelStirnfalten;
+	/**
+	 * Der Wert fuer den Mundwinkel.
+	 */
 	private int mundwinkel;
+	/**
+	 * Der Wert fuer die Augenoeffnung.
+	 */
 	private int pixelAugen;
 	
+	/**
+	 * Konstruktor der einen Frame aus einer Textzeile erzeugt.
+	 * 
+	 * @param line Textzeile mit den Daten fuer das Frame, es gilt folgende
+	 * 			   Reihenfolge "Frame ID","Stirnfalten","Mundwinkel"
+	 * 			   und "Augenoeffnung". 
+	 */
 	public Frame(String line) {
 		String[] tokens;
 		if(line.matches("\\d*;\\d*;\\d*;\\d*")) {
@@ -31,7 +50,7 @@ public class Frame {
 	}
 
 	/*
-	 * Setter und Getter Funktionen
+	 * Setter und Getter Funktionen.
 	 */
 	public int getPixelStirnfalten() {
 		return pixelStirnfalten;
