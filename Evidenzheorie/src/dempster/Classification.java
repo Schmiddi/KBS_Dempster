@@ -8,6 +8,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Kontrolliert den Daten und Informationsfluss, stoesst berechnung der
+ * Evidenzen an und liesst Informationen zu Frames aus Datei aus
+ * 
+ * @author Dennis Schmidt, Patrick Kalmbach
+ *
+ */
 public class Classification {
 	
 	/**
