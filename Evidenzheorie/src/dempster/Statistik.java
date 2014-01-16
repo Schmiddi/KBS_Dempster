@@ -17,10 +17,6 @@ public class  Statistik {
 	 */
 	private static final double meanStirn = 527.5; // Mean aus Testdaten
 	/**
-	 * Standardabweichung bei der Anzahl an Stirnfalten.
-	 */
-	private static final double stdDeviationStirn = 339.2;
-	/**
 	 * Minimum von der Anzahl an Stirnfalten.
 	 */
 	private static final double minStirn = 104;
@@ -37,10 +33,6 @@ public class  Statistik {
 	 * Durchschnitt bei Augenoeffnung.
 	 */
 	private static final double meanAugen = 18.02;
-	/**
-	 * Standardabweichung bei Augenoeffnung.
-	 */
-	private static final double stdDeviationAugen = 6.498;
 	/**
 	 * Minimum bei Augenoeffnung.
 	 */
@@ -83,10 +75,6 @@ public class  Statistik {
 		return meanStirn;
 	}
 
-	public static double getStdDeviationStirn() {
-		return stdDeviationStirn;
-	}
-
 	public static double getMinStirn() {
 		return minStirn;
 	}
@@ -99,9 +87,6 @@ public class  Statistik {
 		return meanAugen;
 	}
 
-	public static double getStdDeviationAugen() {
-		return stdDeviationAugen;
-	}
 
 	public static double getMinAugen() {
 		return minAugen;
