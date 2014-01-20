@@ -1,6 +1,8 @@
 package dempster;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 /**
  * 
@@ -115,7 +117,7 @@ public class Basismass {
 	public double glaube(TreeSet<Emotion> emotionen) {
 		double belief = 0;
 		for(TeilmengeBM tbm : this.teilmengen)
-			if(tbm.getEmotionen().containsAll(emotionen))
+			if(emotionen.containsAll(tbm.getEmotionen()))
 				belief += tbm.getEvidenz();
 		return belief;
 	}
@@ -160,27 +162,30 @@ public class Basismass {
 	}
 	
 	/**
-	 * Gibt die Emotion zurueck, fuer die der Glaube maximal ist
-	 * @return	Liste von Emotionen mit fuer die der Glaube maximal ist
+	 * Gibt die Emotion zurueck, fuer die die Plausibilitaet maximal ist
+	 * @return	Ein String mit der maximalen Plausibilitaet und den dazu gehoerigen Emotionen 
 	 */
-	public List<Emotion> getMostLikelyEmotion() {
-		List<Emotion> emotion = new ArrayList<Emotion>();
-		double value = 0;
+	public String getMostLikelyEmotion() {
+		Map<Double,List<Emotion>> emotion = new HashMap<Double, List<Emotion>>();
+		double maxPl = 0;
 		double tmp;
 		Emotion[] emotions = Emotion.all();
 		TreeSet<Emotion> set = new TreeSet<Emotion>();
 		
 		for(Emotion s : emotions) {
 			set.add(s);
-			tmp = this.glaube(set);
-			if(tmp >= value) {
-				value = tmp;
-				emotion.add(s);
+			tmp = this.plausibilitaet(set);
+			if(emotion.get(tmp) == null){
+				emotion.put(tmp, new ArrayList<Emotion>());
+			}
+			emotion.get(tmp).add(s);
+			if(tmp >= maxPl) {
+				maxPl = tmp;
 			}
 			set.clear();
 		}
 		
-		return emotion;
+		return  "\tMax Pl: " + String.format("%.3f", maxPl) + "\tEmotionen: " + emotion.get(maxPl).toString() ;
 	}
 	
 	/**

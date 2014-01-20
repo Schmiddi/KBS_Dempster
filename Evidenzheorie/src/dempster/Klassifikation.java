@@ -100,9 +100,9 @@ public class Klassifikation {
 	 * an.
 	 * 
 	 * @param frame	Frame fuer den die dargestellte Emotione ermittelt werden soll
-	 * @return		Emotionen fuer die der Glaube maximal ist
+	 * @return		Ein String mit der maximalen Plausibilitaet und den dazu gehoerigen Emotionen 
 	 */
-	public List<Emotion> berechneEvidenz(Frame frame){
+	public String berechneEvidenz(Frame frame){
 		Basismass m1, m2, m3, m12, m123;
 		
 		ArrayList<TeilmengeBM> teilmengen = new ArrayList<TeilmengeBM>();
